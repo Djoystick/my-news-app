@@ -23,9 +23,9 @@ export function App() {
     <AppRoot appearance={isDark ? 'dark' : 'light'}>
       <HashRouter>
         <Routes>
-          {routes.map((route) => (
-            <Route key={route.path} {...route} />
-          ))}
+          {routes.map(({ path, Component }) => (
+  <Route key={path} path={path} element={<Component />} />
+))}
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </HashRouter>
