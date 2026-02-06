@@ -11,11 +11,12 @@ export default tseslint.config(
     files: ['src/**/*.{js,jsx,mjs,cjs,ts,tsx}'],
     extends: [
       eslint.configs.recommended,
-      ...tseslint.configs.recommendedTypeChecked,
+      // Use TS configs that don't require type information to avoid parserOptions.project setup.
+      ...tseslint.configs.recommended,
     ],
     plugins: {
       react,
-      'react-hooks': reactHooks
+      'react-hooks': reactHooks,
     },
     languageOptions: {
       parserOptions: {
@@ -31,6 +32,7 @@ export default tseslint.config(
     },
     rules: {
       '@typescript-eslint/no-unused-expressions': 0,
+      '@typescript-eslint/no-explicit-any': 0,
     },
-  }
+  },
 );

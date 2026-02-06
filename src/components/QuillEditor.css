@@ -1,0 +1,20 @@
+ql-container {
+font-size: 14px;
+font-family: inherit;
+}
+.ql-editor {
+min-height: 250px;
+max-height: 400px;
+padding: 12px;
+}
+.ql-toolbar {
+border-top: 1px solid #ccc;
+border-left: 1px solid #ccc;
+border-right: 1px solid #ccc;
+}
+.ql-container {
+border-left: 1px solid #ccc;
+10.3 Дополнительный CSS для QuillEditor
+border-right: 1px solid #ccc;
+border-bottom: 1px solid #ccc;
+}
