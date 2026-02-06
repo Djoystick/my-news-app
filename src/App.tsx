@@ -1,41 +1,34 @@
-import { useState } from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { Navigate, Route, Routes, HashRouter } from 'react-router-dom';
 import { AppRoot } from '@telegram-apps/telegram-ui';
+import { routes } from '@/navigation/routes';
 
-import { HomePage } from './pages/HomePage';
-import { ArticleDetailPage } from './pages/ArticleDetailPage';
-import { EditorPage } from './pages/EditorPage';
-import { AdminPage } from './pages/AdminPage';
-import { BottomNavigation } from './components/BottomNavigation';
+function isTelegramEnv() {
+  try {
+    // @ts-ignore
+    return Boolean(window.Telegram?.WebApp);
+  } catch {
+    return false;
+  }
+}
 
 export function App() {
-  const [currentTab, setCurrentTab] = useState<'home' | 'editor' | 'admin'>('home');
+  const telegram = isTelegramEnv()
+    // @ts-ignore
+    ? window.Telegram.WebApp
+    : null;
+
+  const isDark = telegram?.colorScheme === 'dark';
 
   return (
-    <AppRoot>
-      <BrowserRouter>
-        <div
-          style={{
-            minHeight: '100vh',
-            display: 'flex',
-            flexDirection: 'column',
-          }}
-        >
-          <div style={{ flex: 1 }}>
-            <Routes>
-              <Route path="/" element={<HomePage />} />
-              <Route path="/article/:articleId" element={<ArticleDetailPage />} />
-              <Route path="/editor" element={<EditorPage />} />
-              <Route path="/admin" element={<AdminPage />} />
-            </Routes>
-          </div>
-          <BottomNavigation
-            currentTab={currentTab}
-            onTabChange={(tab) => setCurrentTab(tab as typeof currentTab)}
-          />
-        </div>
-      </BrowserRouter>
+    <AppRoot appearance={isDark ? 'dark' : 'light'}>
+      <HashRouter>
+        <Routes>
+          {routes.map((route) => (
+            <Route key={route.path} {...route} />
+          ))}
+          <Route path="*" element={<Navigate to="/" />} />
+        </Routes>
+      </HashRouter>
     </AppRoot>
   );
 }
-
