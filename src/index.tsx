@@ -1,3 +1,8 @@
+import eruda from 'eruda';
+
+if (import.meta.env.PROD) {
+  eruda.init();
+}
 import { createRoot } from 'react-dom/client';
 
 const el = document.getElementById('root');
