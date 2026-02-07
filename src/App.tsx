@@ -35,23 +35,33 @@ export function App() {
   const [platform, setPlatform] = useState<string>("unknown");
   const [theme, setTheme] = useState<string>("unknown");
 
+  // Client-only: detect Telegram WebApp after mount. Telegram may inject window.Telegram
+  // slightly after load, so we retry a few times to avoid showing "Not in Telegram" incorrectly.
   useEffect(() => {
-    const tg = (window as any).Telegram?.WebApp;
-
-    if (!tg) {
-      console.warn("Telegram WebApp SDK not found");
-      return;
+    function apply(tg: any) {
+      if (!tg) return false;
+      tg.ready();
+      tg.expand();
+      setIsTelegram(true);
+      setPlatform(tg.platform ?? "unknown");
+      setTheme(tg.colorScheme ?? "unknown");
+      setUser(tg.initDataUnsafe?.user ?? null);
+      return true;
     }
 
-    tg.ready();
-    tg.expand();
+    const delays = [0, 100, 300, 600];
+    const timeouts: number[] = [];
 
-    setIsTelegram(true);
-    setPlatform(tg.platform);
-    setTheme(tg.colorScheme);
-    setUser(tg.initDataUnsafe?.user ?? null);
+    for (const ms of delays) {
+      const id = window.setTimeout(() => {
+        if (apply((window as any).Telegram?.WebApp)) {
+          timeouts.forEach(clearTimeout);
+        }
+      }, ms);
+      timeouts.push(id);
+    }
 
-    console.log("Telegram WebApp initData:", tg.initDataUnsafe);
+    return () => timeouts.forEach(clearTimeout);
   }, []);
 
   return (
