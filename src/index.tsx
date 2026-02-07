@@ -15,6 +15,7 @@ import './index.css';
 import './mockEnv.ts';
 
 const root = ReactDOM.createRoot(document.getElementById('root')!);
+const isDev = import.meta.env.DEV;
 
 try {
   const launchParams = retrieveLaunchParams();
@@ -36,5 +37,19 @@ try {
       );
     });
 } catch {
-  root.render(<EnvUnsupported/>);
+  if (isDev) {
+    // Development: render app anyway so we can test on "unsupported" clients (e.g. Telegram Desktop 6.5).
+    await init({
+      debug: true,
+      eruda: false,
+      mockForMacOS: false,
+    });
+    root.render(
+      <StrictMode>
+        <Root/>
+      </StrictMode>,
+    );
+  } else {
+    root.render(<EnvUnsupported/>);
+  }
 }
