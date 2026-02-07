@@ -8,6 +8,28 @@ type TgUser = {
 };
 
 export function App() {
+  useEffect(() => {
+    const info = {
+      userAgent: navigator.userAgent,
+      hasTelegram: Boolean((window as any).Telegram),
+      hasWebApp: Boolean((window as any).Telegram?.WebApp),
+      initData: (window as any).Telegram?.WebApp?.initData ?? null,
+      platform: (window as any).Telegram?.WebApp?.platform ?? null,
+      version: (window as any).Telegram?.WebApp?.version ?? null,
+    };
+  
+    console.log("TG DEBUG:", info);
+  
+    const pre = document.createElement("pre");
+    pre.style.color = "white";
+    pre.style.padding = "12px";
+    pre.style.fontSize = "12px";
+    pre.style.whiteSpace = "pre-wrap";
+    pre.textContent = JSON.stringify(info, null, 2);
+  
+    document.body.appendChild(pre);
+  }, []);
+  
   const [isTelegram, setIsTelegram] = useState(false);
   const [user, setUser] = useState<TgUser | null>(null);
   const [platform, setPlatform] = useState<string>("unknown");

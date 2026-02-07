@@ -51,6 +51,9 @@ importers:
       '@types/react-dom':
         specifier: ^18.3.7
         version: 18.3.7(@types/react@18.3.26)
+      '@types/telegram-web-app':
+        specifier: ^9.1.1
+        version: 9.1.1
       '@typescript-eslint/eslint-plugin':
         specifier: ^8.28.0
         version: 8.46.1(@typescript-eslint/parser@8.46.1(eslint@9.38.0)(typescript@5.9.3))(eslint@9.38.0)(typescript@5.9.3)
@@ -840,6 +843,9 @@ packages:
 
   '@types/react@18.3.26':
     resolution: {integrity: sha512-RFA/bURkcKzx/X9oumPG9Vp3D3JUgus/d0b67KB0t5S/raciymilkOa66olh78MUI92QLbEJevO7rvqU/kjwKA==}
+
+  '@types/telegram-web-app@9.1.1':
+    resolution: {integrity: sha512-laSJZRDnab91uvq2yNqJnTGr9wz94IsU+6PCiOiJHMqfYqkN4xEXw+wh7KcfbVr0vtEKZxKvYS9fC4zU3scv9g==}
 
   '@types/ws@8.18.1':
     resolution: {integrity: sha512-ThVF6DCVhA8kUGy+aazFQ4kXQ7E1Ty7A3ypFOe0IcJV8O/M511G99AW24irKrW56Wt44yG9+ij8FaqoBGkuBXg==}
@@ -2887,6 +2893,8 @@ snapshots:
     dependencies:
       '@types/prop-types': 15.7.15
       csstype: 3.1.3
+
+  '@types/telegram-web-app@9.1.1': {}
 
   '@types/ws@8.18.1':
     dependencies:
