@@ -1,34 +1,76 @@
-import { Navigate, Route, Routes, HashRouter } from 'react-router-dom';
-import { AppRoot } from '@telegram-apps/telegram-ui';
-import { routes } from '@/navigation/routes';
+import { useEffect, useState } from "react";
 
-function isTelegramEnv() {
-  try {
-    // @ts-ignore
-    return Boolean(window.Telegram?.WebApp);
-  } catch {
-    return false;
-  }
-}
+type TgUser = {
+  id: number;
+  first_name?: string;
+  last_name?: string;
+  username?: string;
+};
 
 export function App() {
-  const telegram = isTelegramEnv()
-    // @ts-ignore
-    ? window.Telegram.WebApp
-    : null;
+  const [isTelegram, setIsTelegram] = useState(false);
+  const [user, setUser] = useState<TgUser | null>(null);
+  const [platform, setPlatform] = useState<string>("unknown");
+  const [theme, setTheme] = useState<string>("unknown");
 
-  const isDark = telegram?.colorScheme === 'dark';
+  useEffect(() => {
+    const tg = (window as any).Telegram?.WebApp;
+
+    if (!tg) {
+      console.warn("Telegram WebApp SDK not found");
+      return;
+    }
+
+    tg.ready();
+    tg.expand();
+
+    setIsTelegram(true);
+    setPlatform(tg.platform);
+    setTheme(tg.colorScheme);
+    setUser(tg.initDataUnsafe?.user ?? null);
+
+    console.log("Telegram WebApp initData:", tg.initDataUnsafe);
+  }, []);
 
   return (
-    <AppRoot appearance={isDark ? 'dark' : 'light'}>
-      <HashRouter>
-        <Routes>
-          {routes.map(({ path, Component }) => (
-  <Route key={path} path={path} element={<Component />} />
-))}
-          <Route path="*" element={<Navigate to="/" />} />
-        </Routes>
-      </HashRouter>
-    </AppRoot>
+    <div
+      style={{
+        minHeight: "100vh",
+        background: "#0f172a",
+        color: "white",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        fontFamily: "system-ui, sans-serif",
+      }}
+    >
+      <div style={{ textAlign: "center", maxWidth: 320 }}>
+        <h2 style={{ marginBottom: 12 }}>🚀 React is alive</h2>
+
+        {isTelegram ? (
+          <>
+            <p style={{ color: "#22c55e" }}>✅ Telegram Mini App</p>
+            <p>Platform: {platform}</p>
+            <p>Theme: {theme}</p>
+
+            {user ? (
+              <p>
+                User:{" "}
+                {user.username
+                  ? `@${user.username}`
+                  : user.first_name ?? "unknown"}
+              </p>
+            ) : (
+              <p>User: not available</p>
+            )}
+          </>
+        ) : (
+          <>
+            <p style={{ color: "#facc15" }}>⚠️ Not in Telegram</p>
+            <p>Opened in regular browser</p>
+          </>
+        )}
+      </div>
+    </div>
   );
 }
