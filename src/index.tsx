@@ -1,55 +1,25 @@
-// Include Telegram UI styles first to allow our code override the package CSS.
-import '@telegram-apps/telegram-ui/dist/styles.css';
+import React from 'react';
+import { createRoot } from 'react-dom/client';
 
-import ReactDOM from 'react-dom/client';
-import { StrictMode } from 'react';
-import { retrieveLaunchParams } from '@tma.js/sdk-react';
+const el = document.getElementById('root');
 
-import { Root } from '@/components/Root.tsx';
-import { EnvUnsupported } from '@/components/EnvUnsupported.tsx';
-import { init } from '@/init.ts';
-
-import './index.css';
-
-// Mock the environment in case, we are outside Telegram.
-import './mockEnv.ts';
-
-const root = ReactDOM.createRoot(document.getElementById('root')!);
-const isDev = import.meta.env.DEV;
-
-try {
-  const launchParams = retrieveLaunchParams();
-  const { tgWebAppPlatform: platform } = launchParams;
-  const debug = (launchParams.tgWebAppStartParam || '').includes('debug')
-    || import.meta.env.DEV;
-
-  // Configure all application dependencies.
-  await init({
-    debug,
-    eruda: debug && ['ios', 'android'].includes(platform),
-    mockForMacOS: platform === 'macos',
-  })
-    .then(() => {
-      root.render(
-        <StrictMode>
-          <Root/>
-        </StrictMode>,
-      );
-    });
-} catch {
-  if (isDev) {
-    // Development: render app anyway so we can test on "unsupported" clients (e.g. Telegram Desktop 6.5).
-    await init({
-      debug: true,
-      eruda: false,
-      mockForMacOS: false,
-    });
-    root.render(
-      <StrictMode>
-        <Root/>
-      </StrictMode>,
-    );
-  } else {
-    root.render(<EnvUnsupported/>);
-  }
+if (!el) {
+  alert('ROOT ELEMENT NOT FOUND');
+  throw new Error('Root element not found');
 }
+
+createRoot(el).render(
+  <div
+    style={{
+      color: 'white',
+      background: '#1c1c1c',
+      height: '100vh',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      fontSize: 24,
+    }}
+  >
+    🚀 REACT IS ALIVE
+  </div>
+);
